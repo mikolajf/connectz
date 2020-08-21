@@ -17,17 +17,20 @@ class IllegalGameError(Exception):
     pass
 
 
-def valid_game_params(*args):
+def check_valid_game_params(*args):
+    """Check if dimensions describe a game that can be won."""
     return args[2] <= max(args[:2])
 
 
 def check_all_positive_int(*args):
+    """Check if all dimensions are postive integers, Invalid file otheriwse"""
     # must be handled separately to valid_game_params
     # Invalid file, not game specs
     return all(x > 0 for x in args)
 
 
 def get_params(line):
+    """Get params from first line. Convert to positive integer, return x,y,z."""
     try:
         params = list(map(int, line.split()))
     except ValueError:
@@ -35,29 +38,39 @@ def get_params(line):
 
     if len(params) != 3:
         raise InvalidFileError
-    
+
     if not check_all_positive_int(*params):
         raise InvalidFileError
 
-    if not valid_game_params(*params):
+    if not check_valid_game_params(*params):
         raise IllegalGameError
 
     return params
 
 
 def get_sublists(vec, length):
+    """Get all sublist of desired length."""
     return (vec[i:(i+length)] for i in range(len(vec) - length + 1))
 
 
-def check_all_equal(vec):
+def check_all_equal_is_winner(vec):
+    """Check if a vector consists of one non-zero values."""
     unique = set(vec)
     return len(unique) <= 1 and 0 not in unique
 
 
-Point = namedtuple('Point', ['x', 'y'])
+def parse_move(line):
+    """Check if move can be converted to postive integer."""
+    number = int(line.strip())
+    if number < 1:
+        raise ValueError
+    return number
 
 
 class CollectZ:
+    """
+    Class representation of Collect Z game
+    """
 
     def __init__(self, x, y, z):
         # game params
@@ -69,6 +82,9 @@ class CollectZ:
         # keep track of current player
         self.current_player = 0
         self._won = 0
+        
+        # define a namedtuple for _last_point
+        Point = namedtuple('Point', ['x', 'y'])
         self._last_move = Point(0, 0)
 
         # init grid
@@ -145,7 +161,7 @@ class CollectZ:
     def check_win(self, vec):
         if len(vec) >= self.Z:
             for sublist in get_sublists(vec, self.Z):
-                if check_all_equal(sublist):
+                if check_all_equal_is_winner(sublist):
                     self._won = self.current_player + 1
                     break
 
@@ -173,13 +189,6 @@ class CollectZ:
     def check_complete_game(self):
         return sum([len(self.grid[j])
                     for j in range(self.X)]) == self.X * self.Y
-
-
-def parse_move(line):
-    number = int(line.strip())
-    if number < 1:
-        raise ValueError
-    return number
 
 
 def main(filename):
@@ -223,7 +232,7 @@ def main(filename):
     except FileNotFoundError:
         # File error
         return 9
-    
+
     # print(game.grid)
     # bp()
 
