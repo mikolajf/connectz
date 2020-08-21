@@ -1,6 +1,4 @@
-import sys
 from collections import namedtuple
-from pdb import set_trace as bp
 
 
 class IllegalColumnError(Exception):
@@ -224,6 +222,8 @@ def main(filename):
 
 
 if __name__ == "__main__":
+    import sys
+
     if len(sys.argv) != 2:
         print('connectz.py: Provide one input file')
     else:
