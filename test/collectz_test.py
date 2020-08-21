@@ -14,5 +14,3 @@ class CollectzTest(unittest.TestCase):
         _, tail = os.path.split(filename)
         expected = int(tail[:1])
         self.assertEqual(main(filename), expected)
-
-    

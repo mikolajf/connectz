@@ -75,9 +75,29 @@ class CollectZ:
                 row.append(0)
         return row
 
-    def get_diagonal(self):
-        # get _last_move, look at positive and negative diagonals
-        pass
+    def get_last_upward_diagonal(self):
+        l_bound = - min(self._last_move)
+        u_bound = max(self.X - self._last_move[0], self.Y - self._last_move[1])
+        
+        diag = []
+        for j in range(l_bound, u_bound + 1):
+            try:
+                diag.append(self.grid[self._last_move[0] + j][self._last_move[1] + j])
+            except IndexError:
+                diag.append(0)
+        return diag
+    
+    def get_last_downward_diagonal(self):
+        l_bound = - min(self._last_move[0], self.Y - self._last_move[1])
+        u_bound = max(self.X - self._last_move[0], self._last_move[1])
+        
+        diag = []
+        for j in range(l_bound, u_bound + 1):
+            try:
+                diag.append(self.grid[self._last_move[0] + j][self._last_move[1] - j])
+            except IndexError:
+                diag.append(0)
+        return diag
 
     def append_move_to_grid(self, column):
         # convert user input to python index
@@ -122,6 +142,8 @@ class CollectZ:
         self.check_win(self.get_last_row())
 
         # check all diagonals
+        self.check_win(self.get_last_upward_diagonal())
+        self.check_win(self.get_last_downward_diagonal())
 
     def move(self, line):
         self.append_move_to_grid(line)
