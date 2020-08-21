@@ -42,7 +42,8 @@ def get_sublists(vec, length):
 
 
 def check_all_equal(vec):
-    return len(set(vec)) <= 1
+    unique = set(vec)
+    return len(unique) <= 1 and 0 not in unique
 
 
 class CollectZ:
@@ -69,20 +70,23 @@ class CollectZ:
             raise IllegalColumnError
 
     def get_row(self, row_index):
-        try:
-            row = ([col[row_index] for col in self.grid])
-            return row
-        except IndexError:
-            return []
+        row = []
+        for j in range(self.X):
+            try:
+                row.append(self.grid[j][row_index])
+            except IndexError:
+                row.append(0)
+        return row
 
     def get_diagonal(self):
+        # get _last_move, look at positive and negative diagonals
         pass
 
     def append_move_to_grid(self, column):
         col_index = column - 1
         col = self.get_column(col_index)
         if len(col) < self.Y:
-            self.grid[col_index].append(self.current_player)
+            self.grid[col_index].append(self.current_player + 1)
             self._last_move = [col_index, len(self.get_column(col_index)) - 1]
         else:
             raise IllegalRowError
