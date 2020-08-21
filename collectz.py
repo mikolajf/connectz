@@ -66,11 +66,11 @@ class CollectZ:
     def get_last_column(self):
         return self.grid[self._last_move[0]]
 
-    def get_row(self, row_index):
+    def get_last_row(self):
         row = []
         for j in range(self.X):
             try:
-                row.append(self.grid[j][row_index])
+                row.append(self.grid[j][self._last_move[1]])
             except IndexError:
                 row.append(0)
         return row
@@ -119,7 +119,7 @@ class CollectZ:
         self.check_win(last_column)
 
         # check only the row that has changed
-        self.check_win(self.get_row(self._last_move[1]))
+        self.check_win(self.get_last_row())
 
         # check all diagonals
 
