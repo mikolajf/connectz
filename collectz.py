@@ -20,7 +20,7 @@ class IllegalGameError(Exception):
 
 
 def valid_game_params(*args):
-    return args[2] <= min(args[:2])
+    return args[2] <= max(args[:2])
 
 
 def get_params(line):
