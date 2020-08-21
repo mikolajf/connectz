@@ -23,8 +23,11 @@ def valid_game_params(*args):
 
 
 def get_params(line):
-    params = list(map(int, line.split()))
-
+    try:
+        params = list(map(int, line.split()))
+    except ValueError:
+        raise InvalidFileError
+        
     if len(params) != 3:
         raise InvalidFileError
 
@@ -93,9 +96,7 @@ def parse_move(line):
     return int(line.strip())
 
 
-def main():
-    filename = sys.argv[1]
-
+def main(filename):
     with open(filename) as fp:
         line = fp.readline()
 
@@ -133,7 +134,7 @@ def main():
             line = fp.readline()
 
     print(game.grid)
-    bp()
+    # bp()
 
     if game.is_game_won():
         # one of players won
@@ -144,5 +145,7 @@ def main():
 
 
 if __name__ == "__main__":
-    result = main()
+    # TODO error if more than one file has been provided
+    
+    result = main(sys.argv[1])
     print(result)
