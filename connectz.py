@@ -32,8 +32,14 @@ def check_all_positive_int(*args):
 
 def get_params(line):
     """Get params from first line. Convert to positive integer, return x,y,z."""
+
+    # check if contains leading/trailing whitespace
+    trimmed = line.rstrip('\n')
+    if trimmed.startswith(' ') or trimmed.endswith(' '):
+        raise InvalidFileError
+
     try:
-        params = list(map(int, line.split()))
+        params = list(map(int, trimmed.split()))
     except ValueError:
         raise InvalidFileError
 
@@ -62,13 +68,13 @@ def check_all_equal_is_winner(vec):
 
 def parse_move(line):
     """Check if move can be converted to postive integer."""
-    trimed = line.rstrip('\n')
+    trimmed = line.rstrip('\n')
 
     # check if contains any whitespace
-    if ' ' in trimed:
+    if ' ' in trimmed:
         raise ValueError
     else:
-        number = int(trimed)
+        number = int(trimmed)
         if number < 1:
             raise ValueError
         return number
