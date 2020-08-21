@@ -39,7 +39,8 @@ def get_params(line):
         raise InvalidFileError
 
     try:
-        params = list(map(int, trimmed.split()))
+        params = list(map(int, trimmed.split(' ')))
+        # provide sep ' ' so that multiple whitespaces aren't grouped together 
     except ValueError:
         raise InvalidFileError
 
