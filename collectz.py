@@ -176,7 +176,10 @@ class CollectZ:
 
 
 def parse_move(line):
-    return int(line.strip())
+    number = int(line.strip())
+    if number < 1:
+        raise ValueError
+    return number
 
 
 def main(filename):
