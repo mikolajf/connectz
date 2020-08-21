@@ -171,7 +171,8 @@ def parse_move(line):
 
 
 def main(filename):
-    with open(filename) as fp:
+    try:
+        fp = open(filename, 'r')
         line = fp.readline()
 
         try:
@@ -192,7 +193,7 @@ def main(filename):
             try:
                 move = parse_move(line)
             except ValueError:
-                return 'invalid line'
+                return 8
 
             if move and game.is_game_won():
                 # 'Illegal continue'
@@ -207,6 +208,10 @@ def main(filename):
 
             line = fp.readline()
 
+    except FileNotFoundError:
+        # File error
+        return 9
+    
     # print(game.grid)
     # bp()
 

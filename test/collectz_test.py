@@ -14,3 +14,6 @@ class CollectzTest(unittest.TestCase):
         _, tail = os.path.split(filename)
         expected = int(tail[:1])
         self.assertEqual(main(filename), expected)
+        
+    def test_invalid_file(self):
+        self.assertEqual(main("dsaffas.txt"), 9)
