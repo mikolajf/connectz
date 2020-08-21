@@ -1,4 +1,5 @@
 from collections import namedtuple
+from pdb import set_trace as bp
 
 
 class IllegalColumnError(Exception):
@@ -61,10 +62,16 @@ def check_all_equal_is_winner(vec):
 
 def parse_move(line):
     """Check if move can be converted to postive integer."""
-    number = int(line.strip())
-    if number < 1:
+    trimed = line.rstrip('\n')
+
+    # check if contains any whitespace
+    if ' ' in trimed:
         raise ValueError
-    return number
+    else:
+        number = int(trimed)
+        if number < 1:
+            raise ValueError
+        return number
 
 
 Point = namedtuple('Point', ['x', 'y'])
@@ -85,7 +92,7 @@ class Connectz:
         # keep track of current player
         self.current_player = 0
         self._won = 0
-        
+
         # define a namedtuple for _last_point
         self._last_move = Point(0, 0)
 
@@ -197,7 +204,6 @@ def main(filename):
     try:
         fp = open(filename, 'r')
         line = fp.readline()
-
         try:
             x, y, z = get_params(line)
         except InvalidFileError:
