@@ -27,7 +27,7 @@ def get_params(line):
         params = list(map(int, line.split()))
     except ValueError:
         raise InvalidFileError
-        
+
     if len(params) != 3:
         raise InvalidFileError
 
@@ -35,6 +35,14 @@ def get_params(line):
         raise IllegalGameError
 
     return params
+
+
+def get_sublists(vec, length):
+    return [vec[i:(i+length)] for i in range(len(vec) - length + 1)]
+
+
+def check_all_equal(vec):
+    return len(set(vec)) <= 1
 
 
 class CollectZ:
@@ -45,10 +53,11 @@ class CollectZ:
         self.X = x
         self.Y = y
         self.Z = z
-    
+
         # keep track of current player
         self.current_player = 0
         self._won = 0
+        self._last_move = []
 
         # init grid
         self.grid = [[] for j in range(self.X)]
@@ -60,18 +69,21 @@ class CollectZ:
             raise IllegalColumnError
 
     def get_row(self, row_index):
-        if row_index in range(self.Y):
-            return ([col[row_index] for col in self.grid])
-        else:
-            raise IndexError('Invalid row_index')
+        try:
+            row = ([col[row_index] for col in self.grid])
+            return row
+        except IndexError:
+            return []
 
     def get_diagonal(self):
         pass
 
     def append_move_to_grid(self, column):
-        col = self.get_column(column)
+        col_index = column - 1
+        col = self.get_column(col_index)
         if len(col) < self.Y:
-            self.grid[column].append(self.current_player)
+            self.grid[col_index].append(self.current_player)
+            self._last_move = [col_index, len(self.get_column(col_index)) - 1]
         else:
             raise IllegalRowError
 
@@ -82,29 +94,35 @@ class CollectZ:
         return bool(self._won)
 
     def winner(self):
-        return (self._won + 1)
-    
-    def check_win(vec):
-        pass
-    
+        return (self._won)
+
+    def check_win(self, vec):
+        if len(vec) >= self.Z:
+            sublists = get_sublists(vec, self.Z)
+
+            for sublist in sublists:
+                if check_all_equal(sublist):
+                    self._won = self.current_player + 1
+                    break
+
     def check_if_winning_move(self):
-        
+
         # check one column just appended
-        # TODO hardcoded 0
-        last_column = self.get_column(0)
+        last_column = self.get_column(self._last_move[0])
         self.check_win(last_column)
-        
-        # check all rows
-        for y in range(self.Y):
-            self.check_win(self.get_row(y))
-        
-        # check all diagonals      
+
+        # check only the row that has changed
+        self.check_win(self.get_row(self._last_move[1]))
+
+        # check all diagonals
 
     def move(self, line):
         self.append_move_to_grid(line)
 
+        # print(self._last_move)
+
         self.check_if_winning_move()
-        
+
         # switch to next player
         self.next_player()
 
@@ -123,7 +141,7 @@ def main(filename):
             return 8
         except IllegalGameError:
             return 7
-        
+
         # initialize game
         game = CollectZ(x, y, z)
 
@@ -150,7 +168,7 @@ def main(filename):
 
             line = fp.readline()
 
-    print(game.grid)
+    # print(game.grid)
     # bp()
 
     if game.is_game_won():
@@ -163,6 +181,6 @@ def main(filename):
 
 if __name__ == "__main__":
     # TODO error if more than one file has been provided
-    
+
     result = main(sys.argv[1])
     print(result)
