@@ -39,7 +39,7 @@ def get_params(line):
 
 
 def get_sublists(vec, length):
-    return [vec[i:(i+length)] for i in range(len(vec) - length + 1)]
+    return (vec[i:(i+length)] for i in range(len(vec) - length + 1))
 
 
 def check_all_equal(vec):
@@ -137,9 +137,7 @@ class CollectZ:
 
     def check_win(self, vec):
         if len(vec) >= self.Z:
-            sublists = get_sublists(vec, self.Z)
-
-            for sublist in sublists:
+            for sublist in get_sublists(vec, self.Z):
                 if check_all_equal(sublist):
                     self._won = self.current_player + 1
                     break
