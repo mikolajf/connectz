@@ -10,7 +10,7 @@ class CollectzTest(unittest.TestCase):
     all_files = glob.glob('examples/*.txt')
 
     @parameterized.expand(all_files)
-    def test_assessment_examples(self, filename):
+    def test_file(self, filename):
         _, tail = os.path.split(filename)
         expected = int(tail[:1])
         self.assertEqual(main(filename), expected)

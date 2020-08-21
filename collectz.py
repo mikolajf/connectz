@@ -68,11 +68,14 @@ class CollectZ:
         self.grid = [[] for j in range(self.X)]
 
     def get_last_column(self):
-        return self.grid[self._last_move.x]
+        return self.grid[self._last_move.x][-self.Z:]
 
     def get_last_row(self):
+        l_bound = max(0, self._last_move.x - self.Z)
+        u_bound = min(self.X, self._last_move.x + self.Z)
+
         row = []
-        for j in range(self.X):
+        for j in range(l_bound, u_bound + 1):
             try:
                 row.append(self.grid[j][self._last_move.y])
             except IndexError:
@@ -80,8 +83,9 @@ class CollectZ:
         return row
 
     def get_last_upward_diagonal(self):
-        l_bound = - min(self._last_move)
-        u_bound = max(self.X - self._last_move.x, self.Y - self._last_move.y)
+        l_bound = - min(min(self._last_move), self.Z)
+        u_bound = min(max(self.X - self._last_move.x,
+                          self.Y - self._last_move.y), self.Z)
 
         diag = []
         for j in range(l_bound, u_bound + 1):
@@ -93,8 +97,10 @@ class CollectZ:
         return diag
 
     def get_last_downward_diagonal(self):
-        l_bound = - min(self._last_move.x, self.Y - self._last_move.y)
-        u_bound = max(self.X - self._last_move.x, self._last_move.y)
+        l_bound = - min(min(self._last_move.x, self.Y -
+                            self._last_move.y), self.Z)
+        u_bound = min(max(self.X - self._last_move.x,
+                          self._last_move.y), self.Z)
 
         diag = []
         for j in range(l_bound, u_bound + 1):
