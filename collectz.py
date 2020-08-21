@@ -125,6 +125,9 @@ class CollectZ:
 
         # switch to next player
         self.next_player()
+        
+    def check_complete_game(self):
+        return sum([len(self.get_column(j)) for j in range(self.X)]) == self.X * self.Y
 
 
 def parse_move(line):
@@ -170,13 +173,16 @@ def main(filename):
 
     # print(game.grid)
     # bp()
-
+    
     if game.is_game_won():
         # one of players won
         return game.winner()
-    else:
+    elif game.check_complete_game():
         # 'Draw'
         return 0
+    else:
+        # Incomplete
+        return 3   
 
 
 if __name__ == "__main__":
