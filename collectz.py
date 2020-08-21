@@ -48,7 +48,6 @@ class CollectZ:
     
         # keep track of current player
         self.current_player = 0
-
         self._won = 0
 
         # init grid
@@ -84,10 +83,28 @@ class CollectZ:
 
     def winner(self):
         return (self._won + 1)
+    
+    def check_win(vec):
+        pass
+    
+    def check_if_winning_move(self):
+        
+        # check one column just appended
+        # TODO hardcoded 0
+        last_column = self.get_column(0)
+        self.check_win(last_column)
+        
+        # check all rows
+        for y in range(self.Y):
+            self.check_win(self.get_row(y))
+        
+        # check all diagonals      
 
     def move(self, line):
         self.append_move_to_grid(line)
 
+        self.check_if_winning_move()
+        
         # switch to next player
         self.next_player()
 
@@ -103,7 +120,7 @@ def main(filename):
         try:
             x, y, z = get_params(line)
         except InvalidFileError:
-            return 'invalid file structure'
+            return 8
         except IllegalGameError:
             return 7
         
