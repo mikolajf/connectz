@@ -21,6 +21,12 @@ def valid_game_params(*args):
     return args[2] <= max(args[:2])
 
 
+def check_all_positive_int(*args):
+    # must be handled separately to valid_game_params
+    # Invalid file, not game specs
+    return all(x > 0 for x in args)
+
+
 def get_params(line):
     try:
         params = list(map(int, line.split()))
@@ -28,6 +34,9 @@ def get_params(line):
         raise InvalidFileError
 
     if len(params) != 3:
+        raise InvalidFileError
+    
+    if not check_all_positive_int(*params):
         raise InvalidFileError
 
     if not valid_game_params(*params):
