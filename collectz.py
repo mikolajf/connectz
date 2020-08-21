@@ -224,7 +224,8 @@ def main(filename):
 
 
 if __name__ == "__main__":
-    # TODO error if more than one file has been provided
-
-    result = main(sys.argv[1])
-    print(result)
+    if len(sys.argv) != 2:
+        print('connectz.py: Provide one input file')
+    else:
+        result = main(sys.argv[1])
+        print(result)
