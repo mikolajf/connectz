@@ -1,4 +1,5 @@
 import sys
+from collections import namedtuple
 from pdb import set_trace as bp
 
 
@@ -46,6 +47,9 @@ def check_all_equal(vec):
     return len(unique) <= 1 and 0 not in unique
 
 
+Point = namedtuple('Point', ['x', 'y'])
+
+
 class CollectZ:
 
     def __init__(self, x, y, z):
@@ -58,43 +62,45 @@ class CollectZ:
         # keep track of current player
         self.current_player = 0
         self._won = 0
-        self._last_move = []
+        self._last_move = Point(0, 0)
 
         # init grid
         self.grid = [[] for j in range(self.X)]
 
     def get_last_column(self):
-        return self.grid[self._last_move[0]]
+        return self.grid[self._last_move.x]
 
     def get_last_row(self):
         row = []
         for j in range(self.X):
             try:
-                row.append(self.grid[j][self._last_move[1]])
+                row.append(self.grid[j][self._last_move.y])
             except IndexError:
                 row.append(0)
         return row
 
     def get_last_upward_diagonal(self):
         l_bound = - min(self._last_move)
-        u_bound = max(self.X - self._last_move[0], self.Y - self._last_move[1])
-        
+        u_bound = max(self.X - self._last_move.x, self.Y - self._last_move.y)
+
         diag = []
         for j in range(l_bound, u_bound + 1):
             try:
-                diag.append(self.grid[self._last_move[0] + j][self._last_move[1] + j])
+                diag.append(self.grid[self._last_move.x + j]
+                            [self._last_move.y + j])
             except IndexError:
                 diag.append(0)
         return diag
-    
+
     def get_last_downward_diagonal(self):
-        l_bound = - min(self._last_move[0], self.Y - self._last_move[1])
-        u_bound = max(self.X - self._last_move[0], self._last_move[1])
-        
+        l_bound = - min(self._last_move.x, self.Y - self._last_move.y)
+        u_bound = max(self.X - self._last_move.x, self._last_move.y)
+
         diag = []
         for j in range(l_bound, u_bound + 1):
             try:
-                diag.append(self.grid[self._last_move[0] + j][self._last_move[1] - j])
+                diag.append(self.grid[self._last_move.x + j]
+                            [self._last_move.y - j])
             except IndexError:
                 diag.append(0)
         return diag
@@ -110,7 +116,7 @@ class CollectZ:
             self.grid[col_index].append(self.current_player + 1)
 
             # set _last_move variable
-            self._last_move = [col_index, len(self.grid[col_index]) - 1]
+            self._last_move = Point(col_index, len(self.grid[col_index]) - 1)
         else:
             raise IllegalRowError
 
@@ -147,8 +153,6 @@ class CollectZ:
 
     def move(self, line):
         self.append_move_to_grid(line)
-
-        # print(self._last_move)
 
         self.check_if_winning_move()
 
