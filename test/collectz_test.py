@@ -1,11 +1,11 @@
 import unittest
-from collectz import main
+from connectz import main
 from parameterized import parameterized
 import glob
 import os
 
 
-class CollectzTest(unittest.TestCase):
+class ConnectzTest(unittest.TestCase):
 
     all_files = glob.glob('examples/*.txt')
 

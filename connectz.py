@@ -67,7 +67,10 @@ def parse_move(line):
     return number
 
 
-class CollectZ:
+Point = namedtuple('Point', ['x', 'y'])
+
+
+class Connectz:
     """
     Class representation of Collect Z game
     """
@@ -84,7 +87,6 @@ class CollectZ:
         self._won = 0
         
         # define a namedtuple for _last_point
-        Point = namedtuple('Point', ['x', 'y'])
         self._last_move = Point(0, 0)
 
         # init grid
@@ -204,7 +206,7 @@ def main(filename):
             return 7
 
         # initialize game
-        game = CollectZ(x, y, z)
+        game = Connectz(x, y, z)
 
         # read first move before loop
         line = fp.readline()
