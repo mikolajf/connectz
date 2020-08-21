@@ -36,11 +36,13 @@ def get_params(line):
 
 class CollectZ:
 
-    def __init__(self, first_line):
+    def __init__(self, x, y, z):
         # game params
 
-        self.X, self.Y, self.Z = get_params(first_line)
-
+        self.X = x
+        self.Y = y
+        self.Z = z
+    
         # keep track of current player
         self.current_player = 0
 
@@ -97,8 +99,15 @@ def main():
     with open(filename) as fp:
         line = fp.readline()
 
+        try:
+            x, y, z = get_params(line)
+        except InvalidFileError:
+            return 'invalid file structure'
+        except IllegalGameError:
+            return 7
+        
         # initialize game
-        game = CollectZ(line)
+        game = CollectZ(x, y, z)
 
         # read first move before loop
         line = fp.readline()
