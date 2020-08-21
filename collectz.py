@@ -63,11 +63,8 @@ class CollectZ:
         # init grid
         self.grid = [[] for j in range(self.X)]
 
-    def get_column(self, col_index):
-        if col_index in range(self.X):
-            return self.grid[col_index]
-        else:
-            raise IllegalColumnError
+    def get_last_column(self):
+        return self.grid[self._last_move[0]]
 
     def get_row(self, row_index):
         row = []
@@ -83,11 +80,17 @@ class CollectZ:
         pass
 
     def append_move_to_grid(self, column):
+        # convert user input to python index
         col_index = column - 1
-        col = self.get_column(col_index)
-        if len(col) < self.Y:
+
+        if col_index not in range(0, self.X):
+            raise IllegalColumnError
+        elif len(self.grid[col_index]) < self.Y:
+            # append to column
             self.grid[col_index].append(self.current_player + 1)
-            self._last_move = [col_index, len(self.get_column(col_index)) - 1]
+
+            # set _last_move variable
+            self._last_move = [col_index, len(self.grid[col_index]) - 1]
         else:
             raise IllegalRowError
 
@@ -112,7 +115,7 @@ class CollectZ:
     def check_if_winning_move(self):
 
         # check one column just appended
-        last_column = self.get_column(self._last_move[0])
+        last_column = self.get_last_column()
         self.check_win(last_column)
 
         # check only the row that has changed
@@ -129,9 +132,10 @@ class CollectZ:
 
         # switch to next player
         self.next_player()
-        
+
     def check_complete_game(self):
-        return sum([len(self.get_column(j)) for j in range(self.X)]) == self.X * self.Y
+        return sum([len(self.grid[j])
+                    for j in range(self.X)]) == self.X * self.Y
 
 
 def parse_move(line):
@@ -177,7 +181,7 @@ def main(filename):
 
     # print(game.grid)
     # bp()
-    
+
     if game.is_game_won():
         # one of players won
         return game.winner()
@@ -186,7 +190,7 @@ def main(filename):
         return 0
     else:
         # Incomplete
-        return 3   
+        return 3
 
 
 if __name__ == "__main__":
