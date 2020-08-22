@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 
-# define multiple exceptions classes to map return codes in task
+# define multiple exceptions classes to map return codes in the task
 
 class IllegalColumnError(Exception):
     # 6 Illegal column
@@ -36,7 +36,7 @@ def check_all_positive_int(*args):
 
 
 def get_params(line):
-    """Get params from first line. Convert to positive integer, return x,y,z."""
+    """Get params from first line. Convert to positive integer, return x,y,z"""
 
     # check if contains leading/trailing whitespace
     trimmed = line.rstrip('\n')
@@ -93,7 +93,7 @@ Point = namedtuple('Point', ['x', 'y'])
 
 class Connectz:
     """
-    Class representation of Collect Z game
+    Class representation of Connect Z game
     """
 
     def __init__(self, x, y, z):
@@ -130,7 +130,10 @@ class Connectz:
         return row
 
     def get_last_upward_diagonal(self):
-        """Get an upward diagonal that has changed in last move. Bound by grid size and Z."""
+        """
+        Get an upward diagonal that has changed in last move.
+        Bound by grid size and Z.
+        """
         l_bound = - min(min(self.last_move), self.Z)
         u_bound = min(max(self.X - self.last_move.x,
                           self.Y - self.last_move.y), self.Z)
@@ -145,7 +148,10 @@ class Connectz:
         return diag
 
     def get_last_downward_diagonal(self):
-        """Get a downward diagonal that has changed in last move. Bound by grid size and Z."""
+        """
+        Get a downward diagonal that has changed in last move.
+        Bound by grid size and Z.
+        """
         l_bound = - min(min(self.last_move.x, self.Y -
                             self.last_move.y), self.Z)
         u_bound = min(max(self.X - self.last_move.x,
@@ -190,11 +196,10 @@ class Connectz:
 
     def check_vector_for_win(self, vec):
         """Check if any of row/column/diag sublists contain winning pattern."""
-        if len(vec) >= self.Z:
-            for sublist in get_sublists(vec, self.Z):
-                if check_all_equal_is_winner(sublist):
-                    self.won = self.current_player + 1
-                    break
+        for sublist in get_sublists(vec, self.Z):
+            if check_all_equal_is_winner(sublist):
+                self.won = self.current_player + 1
+                break
 
     def check_if_winning_move(self):
         """Check if the lates move won the game."""
@@ -230,7 +235,7 @@ def main(filename):
     try:
         fp = open(filename, 'r')
         line = fp.readline()
-        
+
         try:
             x, y, z = get_params(line)
         except InvalidFileError:
