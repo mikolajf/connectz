@@ -2,7 +2,6 @@ from collections import namedtuple
 
 
 # define multiple exceptions classes to map return codes in the task
-
 class IllegalColumnError(Exception):
     # 6 Illegal column
     pass
@@ -21,6 +20,10 @@ class InvalidFileError(Exception):
 class IllegalGameError(Exception):
     # 7 Illegal game
     pass
+
+
+# define a namedtuple to store information on last move
+Point = namedtuple('Point', ['x', 'y'])
 
 
 def check_valid_game_params(*args):
@@ -74,10 +77,6 @@ def parse_move(line):
         if number < 1:
             raise ValueError
         return number
-
-
-# define a namedtuple to store information on last move
-Point = namedtuple('Point', ['x', 'y'])
 
 
 class Connectz:
@@ -182,7 +181,7 @@ class Connectz:
     def get_winner(self):
         """Get game winner."""
         return (self.won)
-    
+
     @staticmethod
     def get_sublists(vec, length):
         """Get all sublist of desired length."""
@@ -233,9 +232,11 @@ class Connectz:
 
 def main(filename):
     try:
+        # open and read first line
         fp = open(filename, 'r')
         line = fp.readline()
 
+        # run checks on game dimensions
         try:
             x, y, z = parse_game_dimensions(line)
         except InvalidFileError:
@@ -243,10 +244,10 @@ def main(filename):
         except IllegalGameError:
             return 7
 
-        # initialize game
+        # initialize game with valid parameters
         game = Connectz(x, y, z)
 
-        # read first move before loop
+        # proceed to first move before loop
         line = fp.readline()
 
         while line:
@@ -274,10 +275,10 @@ def main(filename):
         return 9
 
     if game.is_game_won():
-        # one of players won
+        # One of players won
         return game.get_winner()
     elif game.check_complete_game():
-        # draw
+        # Draw
         return 0
     else:
         # Incomplete
