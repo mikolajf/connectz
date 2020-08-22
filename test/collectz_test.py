@@ -9,7 +9,7 @@ class ConnectzTest(unittest.TestCase):
 
     all_files = glob.glob('examples/*.txt')
 
-    @parameterized.expand(all_files)
+    @parameterized.expand(sorted(all_files))
     def test_file(self, filename):
         _, tail = os.path.split(filename)
         expected = int(tail[:1])
