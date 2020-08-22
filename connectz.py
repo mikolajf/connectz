@@ -193,11 +193,22 @@ class Connectz:
     def get_winner(self):
         """Get game winner."""
         return (self.won)
+    
+    @staticmethod
+    def get_sublists(vec, length):
+        """Get all sublist of desired length."""
+        return (vec[i:(i+length)] for i in range(len(vec) - length + 1))
+
+    @staticmethod
+    def check_all_equal_is_winner(vec):
+        """Check if a vector consists of one non-zero values."""
+        unique = set(vec)
+        return len(unique) <= 1 and 0 not in unique
 
     def check_vector_for_win(self, vec):
         """Check if any of row/column/diag sublists contain winning pattern."""
-        for sublist in get_sublists(vec, self.Z):
-            if check_all_equal_is_winner(sublist):
+        for sublist in self.get_sublists(vec, self.Z):
+            if self.check_all_equal_is_winner(sublist):
                 self.won = self.current_player + 1
                 break
 
