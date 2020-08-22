@@ -35,7 +35,7 @@ def check_all_positive_int(*args):
     return all(x > 0 for x in args)
 
 
-def get_params(line):
+def parse_game_dimensions(line):
     """Get params from first line. Convert to positive integer, return x,y,z"""
 
     # check if contains leading/trailing whitespace
@@ -60,17 +60,6 @@ def get_params(line):
         raise IllegalGameError
 
     return params
-
-
-def get_sublists(vec, length):
-    """Get all sublist of desired length."""
-    return (vec[i:(i+length)] for i in range(len(vec) - length + 1))
-
-
-def check_all_equal_is_winner(vec):
-    """Check if a vector consists of one non-zero values."""
-    unique = set(vec)
-    return len(unique) <= 1 and 0 not in unique
 
 
 def parse_move(line):
@@ -248,7 +237,7 @@ def main(filename):
         line = fp.readline()
 
         try:
-            x, y, z = get_params(line)
+            x, y, z = parse_game_dimensions(line)
         except InvalidFileError:
             return 8
         except IllegalGameError:
